@@ -7,18 +7,19 @@
 
 import SwiftUI
 
-struct InnerHeightPreferenceKey: PreferenceKey {
-    static let defaultValue: CGFloat = .zero
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
+//struct InnerHeightPreferenceKey: PreferenceKey {
+//    static let defaultValue: CGFloat = .zero
+//    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+//        value = nextValue()
+//    }
+//}
 
 struct HoldingListView: View {
     
     @Bindable var viewModel: UserHoldingsViewModel
     @State private var isExpanded: Bool = false
     @State private var rotaionAngle = 0.0
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         Group {
@@ -30,10 +31,10 @@ struct HoldingListView: View {
                 ZStack(alignment: .bottom) {
                     VStack {
                         headerView
-                        holdingList
+                        holdingList.offset(y: -16)
                     }
                     holdingDetailView
-                }
+                }.ignoresSafeArea(edges: .bottom)
             }
         }.task {
             await viewModel.fetchHoldingsData()
@@ -42,7 +43,10 @@ struct HoldingListView: View {
     
     var retryView: some View {
         VStack {
-            Text(viewModel.errorMessage).padding().background(Color.red.gradient).clipShape(RoundedRectangle(cornerRadius: 16))
+            Text(viewModel.errorMessage)
+                .padding()
+                .background(Color.red.gradient)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             Button {
                 Task {
                     await viewModel.fetchHoldingsData()
@@ -70,7 +74,7 @@ struct HoldingListView: View {
                 .font(.title)
                 .bold()
             Spacer()
-        }.frame(maxWidth: .infinity).background(Color.purple)
+        }.frame(maxWidth: .infinity).background(Color.purple.gradient)
     }
     
     var holdingDetailView: some View {
@@ -89,21 +93,22 @@ struct HoldingListView: View {
             } label: {
                 Image(systemName: "chevron.up.circle.fill")
                     .resizable()
+                    .foregroundColor(.purple)
                     .rotationEffect(.degrees(rotaionAngle))
                     .frame(width: 30, height: 30)
             }
 
             if isExpanded {
-                contentCell(heading: "Profit & Loss", value: viewModel.holdingsData.totalPL).padding()
-            } else {
                 contentCell(heading: "Current Value", value: viewModel.holdingsData.totalCurrentValue)
                 contentCell(heading: "Total Investment", value: viewModel.holdingsData.totalInvestmentValue)
                 contentCell(heading: "Today's Profit and Loss", value: viewModel.holdingsData.todaysPL)
-                contentCell(heading: "Profit & Loss", value: viewModel.holdingsData.totalPL).padding(.top, 20)
+                contentCell(heading: "Profit & Loss", value: viewModel.holdingsData.totalPL).padding(.vertical, 20)
+            } else {
+                contentCell(heading: "Profit & Loss", value: viewModel.holdingsData.totalPL).padding(.vertical, 20)
             }
             
         }.padding()
-            .background(Color.gray.opacity(0.2))
+            .background(colorScheme == .light ? Color.white : Color.init(uiColor: .systemGray6))
             .clipShape(RoundedRectangle(cornerRadius: 16))
             
     }

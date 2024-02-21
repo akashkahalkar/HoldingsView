@@ -10,7 +10,7 @@ import Foundation
 @Observable
 final class UserHoldingsViewModel {
     
-    var isLoadingData = false
+    var isLoadingData = true
     var errorMessage: String = ""
     var holdingsData: UserHoldingData = .init()
     var showSheet: Bool = false
