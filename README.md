@@ -1,4 +1,3 @@
-Screenshots
 ### Screenshots
 <table>
     <tr>
