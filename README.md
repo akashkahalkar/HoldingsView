@@ -1,3 +1,4 @@
+[![Build status](https://github.com/akashkahalkar/HoldingsView/actions/workflows/ios.yml/badge.svg)](https://github.com/akashkahalkar/HoldingsView/actions/workflows/ios.yml)
 ### Screenshots
 <table>
     <tr>
